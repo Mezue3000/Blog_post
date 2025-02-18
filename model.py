@@ -16,7 +16,7 @@ class User(SQLModel, table= True):
     country: str = Field(max_length=25, nullable=False)
     city: str = Field(max_length=25, nullable=False)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), nullable=False)
-    # add relationship
+    # add relationships
     posts : List[Post] = Field(Relationship(back_populates='user'))
 
 
@@ -31,6 +31,15 @@ class Post(SQLModel, table=True):
     updated_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc), sa_column_kwargs= {'onupdate': func.now},nullable=False)
     user_id: int = Field(foreign_key="user.user_id")
-    # add relationship
+    # add relationships
     user:User = Field(Relationship(back_populates='posts'))
+
+
+# create comment model
+class Comment(SQLModel, table=True):
+     comment_id:Optional[int] = Field(default=None, primary_key=True)
+     content:str = Field(max_length=450, nullable=False)
+     created_at: datetime = Field(
+         default_factory=lambda: datetime.now(timezone.utc), sa_column_kwargs={"onupdate": func.now}, nullable=False)
+     post_id: int = Field(foreign_key="post.post_id")
     
