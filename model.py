@@ -1,9 +1,10 @@
-# import vital dependencies
+# import dependencies
+from __future__ import annotations
 from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional, List
 from datetime import datetime, timezone
 from sqlalchemy import func
-from __future__ import annotations
+
 
 
 # create user model
@@ -16,10 +17,8 @@ class User(SQLModel, table= True):
     country: str = Field(max_length=25, nullable=False)
     city: str = Field(max_length=25, nullable=False)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), nullable=False)
-    # add relationships
-    posts : List[Post] = Field(Relationship(back_populates='user'))
-
-
+    # add relationship
+    posts : List[Post] = Relationship(back_populates= "user")
 
 
 # create post model 
@@ -29,17 +28,21 @@ class Post(SQLModel, table=True):
     content: str = Field(max_length=450, nullable=False)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), nullable=False)
     updated_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc), sa_column_kwargs= {'onupdate': func.now},nullable=False)
-    user_id: int = Field(foreign_key="user.user_id")
-    # add relationships
-    user:User = Field(Relationship(back_populates='posts'))
+        default_factory=lambda: datetime.now(timezone.utc), sa_column_kwargs= {'onupdate': func.now()},nullable=False)
+    user_id: int = Field(foreign_key= "user.user_id")
+    # add relationship
+    user: User = Relationship(back_populates= "posts")
+    comments: List[Comment] = Relationship(back_populates= "post")
 
 
 # create comment model
 class Comment(SQLModel, table=True):
-     comment_id:Optional[int] = Field(default=None, primary_key=True)
-     content:str = Field(max_length=450, nullable=False)
+     comment_id: Optional[int] = Field(default=None, primary_key=True)
+     content: str = Field(max_length=450, nullable=False)
      created_at: datetime = Field(
-         default_factory=lambda: datetime.now(timezone.utc), sa_column_kwargs={"onupdate": func.now}, nullable=False)
-     post_id: int = Field(foreign_key="post.post_id")
+         default_factory=lambda: datetime.now(timezone.utc), sa_column_kwargs={"onupdate": func.now()}, nullable=False)
+     post_id: int = Field(foreign_key= "post.post_id")
+     post: Post = Relationship(back_populates= "comments")
+
+
     
