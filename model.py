@@ -24,7 +24,7 @@ class User(SQLModel, table= True):
 # create post model 
 class Post(SQLModel, table=True):
     post_id: Optional[int] = Field(default=None, primary_key=True)
-    title: str = Field(max_length=125, nullable=False)
+    title: str = Field(max_length=125, index=True, nullable=False)
     content: str = Field(max_length=450, nullable=False)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), nullable=False)
     updated_at: datetime = Field(
@@ -38,7 +38,7 @@ class Post(SQLModel, table=True):
 # create comment model
 class Comment(SQLModel, table=True):
      comment_id: Optional[int] = Field(default=None, primary_key=True)
-     content: str = Field(max_length=450, nullable=False)
+     content: str = Field(max_length=450, index=True, nullable=False)
      created_at: datetime = Field(
          default_factory=lambda: datetime.now(timezone.utc), sa_column_kwargs={"onupdate": func.now()}, nullable=False)
      post_id: int = Field(foreign_key= "post.post_id")
