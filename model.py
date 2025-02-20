@@ -29,7 +29,8 @@ class Post(SQLModel, table=True):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), nullable=False)
     updated_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc), sa_column_kwargs= {'onupdate': func.now()},nullable=False)
-    user_id: int = Field(foreign_key= "user.user_id")
+    user_id: int = Field(foreign_key= "user.user_id", sa_relationship_kwargs={
+                        "onupdate": "CASCADE", "ondelete": "NO ACTION"})
     # add relationship
     user: User = Relationship(back_populates= "posts")
     comments: List[Comment] = Relationship(back_populates= "post")
@@ -41,8 +42,6 @@ class Comment(SQLModel, table=True):
      content: str = Field(max_length=450, index=True, nullable=False)
      created_at: datetime = Field(
          default_factory=lambda: datetime.now(timezone.utc), sa_column_kwargs={"onupdate": func.now()}, nullable=False)
-     post_id: int = Field(foreign_key= "post.post_id")
+     post_id: int = Field(foreign_key= "post.post_id", sa_relationship_kwargs={
+                        "onupdate": "CASCADE", "ondelete": "NO ACTION"})
      post: Post = Relationship(back_populates= "comments")
-
-
-    
