@@ -1,9 +1,9 @@
 # import dependencies
 from __future__ import annotations
-from sqlmodel import SQLModel, Field, Relationship
+from sqlmodel import SQLModel, Field, Relationship, func
 from typing import Optional, List
 from datetime import datetime, timezone
-from sqlalchemy import func
+
 
 
 
