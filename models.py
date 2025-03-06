@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 # create user model
 class User(SQLModel, table= True):
     user_id: Optional[int] = Field(default=None, primary_key=True)
-    first_name: str = Field(max_length=25, nullable=True)
+    first_name: str = Field(max_length=25, nullable=False )
     last_name: str = Field(max_length=25, nullable=False)
     username: str = Field(max_length=50, nullable=False, index=True) 
     email: str = Field(max_length=50, unique=True, nullable=False)
@@ -31,7 +31,7 @@ class Post(SQLModel, table=True):
     # add foreign key
     user_id: int = Field(
         foreign_key= "user.user_id", sa_relationship_kwargs={
-        "onupdate": "CASCADE", "ondelete": "NO ACTION"})
+        "onupdate": "CASCADE", "ondelete": "NO ACTION"}) 
     # add relationship
     user: User = Relationship(back_populates= "posts")
     comments: List[Comment] = Relationship(back_populates= "post")
@@ -43,7 +43,6 @@ class Comment(SQLModel, table=True):
      content: str = Field(max_length=450, index=True, nullable=False)
      created_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc), nullable=False)
-     
      updated_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc), sa_column_kwargs={"onupdate": func.now()}, nullable=False)
     #  add foreign key
