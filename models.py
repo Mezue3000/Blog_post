@@ -30,7 +30,7 @@ class Post(SQLModel, table=True):
         default_factory=lambda: datetime.now(timezone.utc), sa_column_kwargs= {'onupdate': func.now()},nullable=False)
     # add foreign key
     user_id: int = Field(
-        foreign_key= "user.user_id", sa_relationship_kwargs={
+        foreign_key= "user.user_id", sa_column_kwargs={
         "onupdate": "CASCADE", "ondelete": "NO ACTION"}) 
     # add relationship
     user: User = Relationship(back_populates= "posts")
@@ -47,7 +47,7 @@ class Comment(SQLModel, table=True):
         default_factory=lambda: datetime.now(timezone.utc), sa_column_kwargs={"onupdate": func.now()}, nullable=False)
     #  add foreign key
      post_id: int = Field(
-        foreign_key= "post.post_id", sa_relationship_kwargs={
+        foreign_key= "post.post_id", sa_column_kwargs={
         "onupdate": "CASCADE", "ondelete": "NO ACTION"})
     #  add relationship
      post: Post = Relationship(back_populates= "comments")

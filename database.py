@@ -12,7 +12,7 @@ async_engine = create_async_engine(database_url, echo= True)
 
 
 # create an async session factory
-AsyncSessionLocal = async_sessionmaker(bind=async_engine, expire_on_commit= False, autoflush= False) 
+AsyncSessionLocal = async_sessionmaker(bind=async_engine, autoflush= False) 
 
 
 # function to get a session
@@ -25,7 +25,8 @@ async def get_db():
 async def create_tables():
     async with async_engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)
+     
         
-
+# run the function
 if __name__ == "__main__":
-    asyncio.run(create_tables()) 
+    asyncio.run(create_tables())
