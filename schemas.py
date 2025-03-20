@@ -18,7 +18,7 @@ class UserBase(SQLModel):
 
 # schema for creating a user
 class UserCreate(UserBase):
-    password_hash: str = Field(..., min_length=12)
+    password: str = Field(..., min_length=12)
     
     
 # schema for reading a user
@@ -27,14 +27,21 @@ class UserRead(UserBase):
     created_at: datetime
     
 
-# schema for updating a user information
-class UserUpdate(SQLModel):
-    first_name: Optional[str] = None
-    last_name: Optional[str] = None
-    username: Optional[str] = None
-    email: Optional[str] = None
-    country: Optional[str] = None
-    city: Optional[str] = None
+# schema for user login
+class UserLogin(SQLModel):
+    username: str
+    email: str
+    password: str 
+
+
+# # schema for updating a user information
+# class UserUpdate(SQLModel):
+#     first_name: Optional[str] = None
+#     last_name: Optional[str] = None
+#     username: Optional[str] = None
+#     email: Optional[str] = None
+#     country: Optional[str] = None
+#     city: Optional[str] = None
     
    
 # schema for updating user password securely  
@@ -43,13 +50,13 @@ class UserPasswordUpdate(SQLModel):
     new_password: str = Field(min_length=12)
     
 
-
 # *****************************Post Model schemas************************************
 # schema to create post
 class PostCreate(SQLModel):
     title: str = Field(..., max_length=125)
     content: str = Field(..., max_length=450)
-    user_id: int     
+    user_id: int  
+       
 
 # schema to read post
 class PostRead(SQLModel):
@@ -65,11 +72,6 @@ class PostRead(SQLModel):
 class PostUpdate(SQLModel):
     title: Optional[str] = None
     content: Optional[str] = None
-    
-
-# schema to delete post  
-class PostDelete(SQLModel):
-    post_id: int
     
     
 # ***************************Comment Schemas*******************************
@@ -92,11 +94,6 @@ class CommentRead(SQLModel):
 # schema to update comment
 class CommentUpdate(SQLModel):
     content: Optional[str] = None
-    
-    
-# schema to delete comment
-class CommentDelete(SQLModel):
-    comment_id: int
     
     
     
