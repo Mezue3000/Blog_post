@@ -1,7 +1,7 @@
 # import dependencies
 import asyncio
 from sqlmodel import SQLModel
-import aiomysql
+import asyncmy 
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 import models
 
@@ -28,10 +28,11 @@ async def create_tables():
     await async_engine.dispose()
      
         
-# run the async function
+# async function
 def main():
     asyncio.run(create_tables())
 
 
 if __name__ == "__main__":
-    main()
+    main() 
+  

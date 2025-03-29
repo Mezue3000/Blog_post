@@ -78,7 +78,7 @@ class PostUpdate(SQLModel):
 
 # schema to create comment
 class CommentCreate(SQLModel):
-    content: str = Field(..., max_length=450)
+    content: str = Field(..., max_length=450) 
     post_id: int
     
     
@@ -94,7 +94,6 @@ class CommentRead(SQLModel):
 # schema to update comment
 class CommentUpdate(SQLModel):
     content: Optional[str] = None
-    
     
     
 
