@@ -4,11 +4,19 @@ from sqlmodel import SQLModel
 import asyncmy 
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 import models
+from dotenv import load_dotenv
+import os
+
+
+# load environment variable
+load_dotenv()
+
+# get database url environment variable
+databaseUrl = os.getenv('database_url')
 
 
 # create asynchronous engine
-database_url ="mysql+asyncmy://blogger_app:angelcode1234567@127.0.0.1:3306/my_blog"
-async_engine = create_async_engine(database_url, echo= True) 
+async_engine = create_async_engine(databaseUrl, echo= True) 
 
 
 # create an async session factory

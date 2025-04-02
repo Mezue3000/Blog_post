@@ -48,6 +48,7 @@ class UserLogin(SQLModel):
 class UserPasswordUpdate(SQLModel):
     old_password: str = Field(min_length=12)
     new_password: str = Field(min_length=12)
+    confirm_password: str = Field(min_length=12) 
     
 
 # *****************************Post Model schemas************************************
