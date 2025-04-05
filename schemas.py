@@ -34,6 +34,17 @@ class UserLogin(SQLModel):
     password: str 
 
 
+# token schema
+class Token(SQLModel):
+    access_token: str
+    token_type: str    
+
+
+# token data schema 
+class TokenData(SQLModel):
+    username: Optional[str] 
+    
+    
 # # schema for updating a user information
 # class UserUpdate(SQLModel):
 #     first_name: Optional[str] = None
@@ -44,7 +55,7 @@ class UserLogin(SQLModel):
 #     city: Optional[str] = None
     
    
-# schema for updating user password securely  
+# schema for updating user password 
 class UserPasswordUpdate(SQLModel):
     old_password: str = Field(min_length=12)
     new_password: str = Field(min_length=12)
