@@ -3,9 +3,9 @@ import secrets
 from datetime import datetime, timedelta, timezone
 from passlib.context import CryptContext
 import jwt
-from jwt import PyJWTError
+from jwt import PyJWTError, ExpiredSignatureError
 from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer
 from sqlmodel.ext.asyncio.session import AsyncSession
 from models import User
 from database import get_db
@@ -48,7 +48,9 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)):
     credential_exception = HTTPException(
-        status_code = status.HTTP_401_UNAUTHORIZED, detail = "invalid credentials")
+        status_code = status.HTTP_401_UNAUTHORIZED, 
+        detail = "invalid credentials", 
+        headers = {"www.Authenticate" : "Bearer"})
     
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
@@ -56,10 +58,17 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession
         if username is None:
             raise credential_exception
         token_data = TokenData(username=username)
+    except ExpiredSignatureError:
+        raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Token has expired",
+        headers={"WWW-Authenticate": "Bearer"}
+    )
+        
     except jwt.PyJWTError:
         raise credential_exception 
     
-    statement = select(User).where(User.username == username)
+    statement = select(User).where(User.username == token_data.username)
     result = await db.exec(statement)
     user = result.one_or_none()
     

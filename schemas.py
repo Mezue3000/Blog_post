@@ -42,7 +42,7 @@ class Token(SQLModel):
 
 # token data schema 
 class TokenData(SQLModel):
-    username: Optional[str] 
+    username: Optional[str] = None
     
     
 # # schema for updating a user information
