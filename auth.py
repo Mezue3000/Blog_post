@@ -38,7 +38,7 @@ async def verify_password(plain_password, hashed_password):
 # function to create jwt access token 
 async def create_access_token(data:dict, expire_delta:timedelta=None):
     to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + (expire_delta or timedelta(timedelta      (minutes=ACCESS_TOKEN_EXPIRE_MINUTES))) 
+    expire = datetime.now(timezone.utc) + (expire_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp" : expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm = ALGORITHM)  
     
@@ -52,18 +52,20 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession
         detail = "invalid credentials", 
         headers = {"www.Authenticate" : "Bearer"})
     
+    expired_token_error = HTTPException(
+        status_code = status.HTTP_401_UNAUTHORIZED,
+        detail = "Token has expired",
+        headers = {"WWW-Authenticate": "Bearer"})
+    
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
         username: Optional[str] = payload.get("sub")
         if username is None:
             raise credential_exception
         token_data = TokenData(username=username)
+        
     except ExpiredSignatureError:
-        raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Token has expired",
-        headers={"WWW-Authenticate": "Bearer"}
-    )
+        raise expired_token_error
         
     except jwt.PyJWTError:
         raise credential_exception 

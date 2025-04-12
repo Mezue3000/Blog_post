@@ -20,7 +20,7 @@ async_engine = create_async_engine(databaseUrl, echo= True)
 
 
 # create an async session factory
-AsyncSessionLocal = async_sessionmaker(bind=async_engine, class_=AsyncSession, autoflush= False) 
+AsyncSessionLocal = async_sessionmaker(bind = async_engine, class_ = AsyncSession, autoflush = False) 
 
 
 # function to get a session

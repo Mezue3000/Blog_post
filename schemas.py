@@ -19,6 +19,7 @@ class UserBase(SQLModel):
 # schema for creating a user
 class UserCreate(UserBase):
     password: str = Field(..., min_length=12)
+    confirm_password = Field(..., min_length=12)
     
     
 # schema for reading a user
@@ -26,13 +27,6 @@ class UserRead(UserBase):
     user_id: int
     created_at: datetime
     
-
-# schema for user login
-class UserLogin(SQLModel):
-    username: str
-    email: str
-    password: str 
-
 
 # token schema
 class Token(SQLModel):
