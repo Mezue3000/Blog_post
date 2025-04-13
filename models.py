@@ -20,7 +20,6 @@ class User(SQLModel, table= True):
     # add relationship
     posts : List[Post] = Relationship(back_populates= "user") 
     
-  
 
 # create post model 
 class Post(SQLModel, table=True):

@@ -10,12 +10,12 @@ from auth import verify_password, create_access_token
 
 
 # initialize router
-router = APIRouter(prefix="/Sign_In", tags=["authenticate"])
+router = APIRouter(tags=["authenticate"])
 
 # create an endpoint to sign_in and grab token
 @router.post("/token", response_model= Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
-    # OAuth2PasswordRequestForm uses "username" for both email and username    
+    # OAuth2PasswordRequestForm uses "username" for both email and username   
     login_identifier = form_data.username 
     password = form_data.password
     
@@ -24,7 +24,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSessi
     result = await db.execute(statement)
     user = result.one_or_none()
     
-    if not user or not verify_password(password, user.password_hash):
+    if not user or not verify_password(password, user.password_hash): 
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail= "Invalid email/username or password"
@@ -32,4 +32,4 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSessi
     
     # generate access token 
     access_token = create_access_token(data= {"sub": user.username})
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {"access_token": access_token, "token_type": "bearer"} 

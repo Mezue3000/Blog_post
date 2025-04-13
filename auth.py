@@ -36,7 +36,7 @@ async def verify_password(plain_password, hashed_password):
 
 
 # function to create jwt access token 
-async def create_access_token(data:dict, expire_delta:timedelta=None):
+async def create_access_token(data: dict, expire_delta: timedelta = None):
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + (expire_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp" : expire})
@@ -49,7 +49,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)):
     credential_exception = HTTPException(
         status_code = status.HTTP_401_UNAUTHORIZED, 
-        detail = "invalid credentials", 
+        detail = "Invalid credentials", 
         headers = {"www.Authenticate" : "Bearer"})
     
     expired_token_error = HTTPException(
