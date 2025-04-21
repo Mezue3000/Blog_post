@@ -16,8 +16,8 @@ router = APIRouter(tags=["authenticate"])
 @router.post("/token", response_model= Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
     # OAuth2PasswordRequestForm uses "username" for both email and username   
-    login_identifier = form_data.username 
-    password = form_data.password
+    login_identifier = form_data.username.lower()
+    password = form_data.password   
     
     # check user by email/username
     statement = select(User).where(or_(User.email == login_identifier, User.username == login_identifier))
@@ -30,6 +30,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSessi
             detail= "Invalid email/username or password"
         )
     
-    # generate access token 
-    access_token = create_access_token(data= {"sub": user.username})
+    # generate jwt access token 
+    access_token = create_access_token(data = {"sub": user.username})
+    
     return {"access_token": access_token, "token_type": "bearer"} 

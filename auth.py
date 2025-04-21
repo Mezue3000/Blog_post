@@ -40,8 +40,8 @@ async def create_access_token(data: dict, expire_delta: timedelta = None):
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + (expire_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp" : expire})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm = ALGORITHM)  
-    
+    return jwt.encode(to_encode, SECRET_KEY, algorithm = ALGORITHM) 
+     
 
 # function to get current user
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")

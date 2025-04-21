@@ -1,6 +1,7 @@
 # import dependencies
 from __future__ import annotations
 from sqlmodel import SQLModel, Field, Relationship, func
+from sqlalchemy.orm import Mapped
 from typing import Optional, List
 from datetime import datetime, timezone
 
@@ -18,7 +19,7 @@ class User(SQLModel, table= True):
     city: str = Field(max_length=25, nullable=False)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), nullable=False)
     # add relationship
-    posts : List[Post] = Relationship(back_populates= "user") 
+    posts : Mapped[List[Post]] = Relationship(back_populates= "user") 
     
 
 # create post model 
@@ -33,8 +34,8 @@ class Post(SQLModel, table=True):
     # add foreign key
     user_id: int = Field(foreign_key= "users.user_id") 
     # add relationship
-    user: User = Relationship(back_populates= "posts")
-    comments: List[Comment] = Relationship(back_populates= "post")
+    user: Mapped[User] = Relationship(back_populates= "posts")
+    comments: Mapped[List[Comment]] = Relationship(back_populates= "post")
 
 
 # create comment model
@@ -49,5 +50,5 @@ class Comment(SQLModel, table=True):
     #  add foreign key
     post_id: int = Field(foreign_key= "posts.post_id")
     #  add relationship
-    post: Post = Relationship(back_populates= "comments") 
+    post: Mapped[Post] = Relationship(back_populates= "comments") 
      

@@ -8,13 +8,13 @@ from models import User
 from auth import hash_password
 
 
-
 # initialize router
-router = APIRouter(prefix="/users", tags="users")
+router = APIRouter(prefix="/users", tags=["users"])
 
 # create endpoint for user registration 
 @router.post("/", response_model = UserRead)  
 async def create_user(user: UserCreate, db: AsyncSession = Depends(get_db)):
+    # validate confirm password field
     if user.password != user.confirm_password:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail= "Password do not match")
     
@@ -31,17 +31,17 @@ async def create_user(user: UserCreate, db: AsyncSession = Depends(get_db)):
     
     # create new user with hash password
     new_user = User(
-        first_name= user.first_name,
-        last_name= user.last_name,
-        username= user.username,
-        email= user.email,
-        password_hash= hash_password(user.password),
-        country= user.country,
-        city= user.city
+        first_name = user.first_name,
+        last_name = user.last_name,
+        username = user.username.lower(),
+        email = user.email.lower(),
+        password_hash = hash_password(user.password),
+        country = user.country,
+        city = user.city
     ) 
     
     db.add(new_user)
     await db.commit()
     await db.refresh(new_user)
     
-    return new_user 
+    return new_user  
